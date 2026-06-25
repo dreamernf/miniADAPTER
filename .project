@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>miniADAPTER</name>
+	<comment>STM32F042 CAN/UART HAL project</comment>
+	<projects></projects>
+	<buildSpec></buildSpec>
+	<natures></natures>
+</projectDescription>
