@@ -16,10 +16,10 @@
 
 extern UART_HandleTypeDef huart2;
 
-
 void logger_uart(const char* msg, ...)
 {
 	    char buff[256];
+	    ///////
 	    va_list args;
 	    va_start(args, msg);
 	    vsnprintf(buff, sizeof(buff), msg, args);
