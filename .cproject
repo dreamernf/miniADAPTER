@@ -51,6 +51,7 @@
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}\Libs\Can&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}\Libs&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}\Libs\Logger&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.38678950" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
@@ -131,6 +132,7 @@
 									<listOptionValue builtIn="false" value="&quot;../Libs\Can&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;\Libs\eeprom&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}\Libs\eeprom&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}\Libs\Logger&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.277303333" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>

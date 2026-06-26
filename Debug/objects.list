@@ -32,6 +32,3 @@
 "./Libs/Logger/dma_printf.o"
 "./Libs/Logger/dma_ring.o"
 "./Libs/Logger/log.o"
-"./Libs/buzzer.o"
-"./Libs/eeprom.o"
-"./Libs/log.o"

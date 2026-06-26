@@ -162,18 +162,6 @@ if (hcan==CANBUS_CLUSTER)
 	}
 }
 
-void Send_Command_to_ExtDevice(uint8_t command, uint8_t status)
-{
-	CAN_TX_FRAME_t TxMsg;
-	TxMsg.can_id=0x67C;
-	TxMsg.anz_bytes = 3;
-	TxMsg.data[0]=0xEE;
-	TxMsg.data[1]=command;
-	TxMsg.data[2]=status;
-	//посылаем запрос
-	CAN_Send_Data(CANBUS_CLUSTER , TxMsg);
-	//Logger_CAN_TX(HAL_GetTick(), LOGGER_CAN_TX, TxMsg);
-}
 
 
 
