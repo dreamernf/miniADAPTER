@@ -13,7 +13,7 @@
 
 extern CAN_HandleTypeDef hcan1;
 
-#define  CANBUS_CLUSTER 		&hcan1
+#define  CANBUS_COMFORT 		&hcan1
 
 typedef struct {
   uint32_t can_id;    // STD=11bit  EXT=29bit
@@ -69,13 +69,11 @@ typedef enum
 
 
 
-void Copy_Data_to_CAN_CLUSTER_buffer(CAN_RX_FRAME_t  _RX_Frame);
+void Copy_Data_to_CAN_COMFORT_buffer(CAN_RX_FRAME_t  _RX_Frame);
 CAN_STATUS_t CAN_Std_Data_receive(CAN_HandleTypeDef * canHandle, CAN_RX_FRAME_t *rx_frame);
 CANErrorStatus CAN_Send_Data(CAN_HandleTypeDef * canHandle, CAN_TX_FRAME_t tx_frame);
 void Set_Filter_CAN(CAN_HandleTypeDef* canHandle, uint32_t FIFO_Buffer, uint32_t can_id1, uint32_t can_id2, uint32_t can_id3, uint32_t can_id4, uint32_t nmb_filter);
 void CAN_Start(CAN_HandleTypeDef* canHandle);
-void Send_Command_to_ExtDevice(uint8_t command, uint8_t status);
-
 
 
 #endif /* CANFUNCS_CAN_LOWLEVEL_FUNCS_H_ */

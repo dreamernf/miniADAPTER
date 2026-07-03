@@ -38,7 +38,7 @@ void MX_CAN_Init(void)
 
   /* USER CODE END CAN_Init 1 */
   hcan1.Instance = CAN;
-  hcan1.Init.Prescaler = 6;
+  hcan1.Init.Prescaler = 30;
   hcan1.Init.Mode = CAN_MODE_NORMAL;
   hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
   hcan1.Init.TimeSeg1 = CAN_BS1_13TQ;
@@ -76,7 +76,7 @@ void HAL_CAN_MspInit(CAN_HandleTypeDef* canHandle)
     PA11     ------> CAN_RX
     PA12     ------> CAN_TX
     */
-    GPIO_InitStruct.Pin = CAN_CLUSTER_RX_Pin|CAN_CLUSTER_TX_Pin;
+    GPIO_InitStruct.Pin = CAN_COMFORT_RX_Pin|CAN_COMFORT_TX_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
@@ -107,7 +107,7 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
     PA11     ------> CAN_RX
     PA12     ------> CAN_TX
     */
-    HAL_GPIO_DeInit(GPIOA, CAN_CLUSTER_RX_Pin|CAN_CLUSTER_TX_Pin);
+    HAL_GPIO_DeInit(GPIOA, CAN_COMFORT_RX_Pin|CAN_COMFORT_TX_Pin);
 
     /* CAN interrupt Deinit */
     HAL_NVIC_DisableIRQ(CEC_CAN_IRQn);
@@ -120,3 +120,4 @@ void HAL_CAN_MspDeInit(CAN_HandleTypeDef* canHandle)
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */
+

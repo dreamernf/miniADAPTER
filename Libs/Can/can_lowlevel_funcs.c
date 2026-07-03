@@ -17,7 +17,7 @@ CAN_FilterTypeDef canFilterConfig;
 extern CAN_HandleTypeDef  hcan1;
 
 
-void Copy_Data_to_CAN_CLUSTER_buffer(CAN_RX_FRAME_t  _RX_Frame)
+void Copy_Data_to_CAN_COMFORT_buffer(CAN_RX_FRAME_t  _RX_Frame)
 {
   uint8_t n=0;
   if(can_buffer.status==CAN_RX_EMPTY)
@@ -42,8 +42,8 @@ CAN_STATUS_t CAN_Std_Data_receive(CAN_HandleTypeDef * canHandle, CAN_RX_FRAME_t 
   CAN_STATUS_t ret_wert=CAN_RX_EMPTY;
   uint8_t n;
 
-  //CAN_CLUSTER
-  if (canHandle==CANBUS_CLUSTER)
+  //CANBUS_COMFORT
+  if (canHandle==CANBUS_COMFORT)
   {
 
 	  if(can_buffer.status==CAN_RX_READY)
@@ -139,9 +139,9 @@ CAN_RxHeaderTypeDef _RX_msgHeader;
 uint8_t _RX_msgData[8]={0,};
 CAN_RX_FRAME_t  RX_Frame;
 
-if (hcan==CANBUS_CLUSTER)
+if (hcan==CANBUS_COMFORT)
 	{
-		  if (HAL_CAN_GetRxMessage(CANBUS_CLUSTER, CAN_RX_FIFO0,  &_RX_msgHeader, _RX_msgData)==HAL_OK)
+		  if (HAL_CAN_GetRxMessage(CANBUS_COMFORT, CAN_RX_FIFO0,  &_RX_msgHeader, _RX_msgData)==HAL_OK)
 		  {
 			  //сохранить данные в буфер
 			  RX_Frame.can_id = _RX_msgHeader.StdId;
@@ -155,9 +155,7 @@ if (hcan==CANBUS_CLUSTER)
 			  RX_Frame.data[6] = _RX_msgData[6];
 			  RX_Frame.data[7] = _RX_msgData[7];
 
-			  Copy_Data_to_CAN_CLUSTER_buffer(RX_Frame);
-
-			  if (RX_Frame.can_id==0x3BA)  Logger_CAN_RX(YES, RX_Frame);
+			  Copy_Data_to_CAN_COMFORT_buffer(RX_Frame);
 		  }
 	}
 }

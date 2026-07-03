@@ -19,7 +19,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "can.h"
-#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -37,17 +36,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define   LED_STATUS_SA_ACTIVE_ON   HAL_GPIO_WritePin(LED_STATUS_SA_ACTIVE_GPIO_Port, LED_STATUS_SA_ACTIVE_Pin, GPIO_PIN_SET)
-#define   LED_STATUS_SA_ACTIVE_OFF  HAL_GPIO_WritePin(LED_STATUS_SA_ACTIVE_GPIO_Port, LED_STATUS_SA_ACTIVE_Pin, GPIO_PIN_RESET)
-
-#define   LED_STATUS_SA_PASSIVE_ON   HAL_GPIO_WritePin(LED_STATUS_SA_PASSIVE_GPIO_Port, LED_STATUS_SA_PASSIVE_Pin, GPIO_PIN_SET)
-#define   LED_STATUS_SA_PASSIVE_OFF  HAL_GPIO_WritePin(LED_STATUS_SA_PASSIVE_GPIO_Port, LED_STATUS_SA_PASSIVE_Pin, GPIO_PIN_RESET)
-
-#define   LED_LEFT_SA_INDICATOR_ON   HAL_GPIO_WritePin(LED_LEFT_SA_INDICATOR_GPIO_Port, LED_LEFT_SA_INDICATOR_Pin, GPIO_PIN_SET)
-#define   LED_LEFT_SA_INDICATOR_OFF  HAL_GPIO_WritePin(LED_LEFT_SA_INDICATOR_GPIO_Port, LED_LEFT_SA_INDICATOR_Pin, GPIO_PIN_RESET)
-
-#define   LED_RIGHT_SA_INDICATOR_ON   HAL_GPIO_WritePin(LED_RIGHT_SA_INDICATOR_GPIO_Port, LED_RIGHT_SA_INDICATOR_Pin, GPIO_PIN_SET)
-#define   LED_RIGHT_SA_INDICATOR_OFF  HAL_GPIO_WritePin(LED_RIGHT_SA_INDICATOR_GPIO_Port, LED_RIGHT_SA_INDICATOR_Pin, GPIO_PIN_RESET)
+#define   OUT2_ON   HAL_GPIO_WritePin(OUT2_GPIO_Port, OUT2_Pin, GPIO_PIN_SET)
+#define   OUT2_OFF  HAL_GPIO_WritePin(OUT2_GPIO_Port, OUT2_Pin, GPIO_PIN_RESET)
 
 
 
@@ -61,7 +51,6 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-CAR_DATA_t  car_data;
 CAN_RX_FRAME_t rx_frame = {0,};
 CAN_TX_FRAME_t tx_frame = {0,};
 /* USER CODE END PV */
@@ -107,22 +96,14 @@ int main(void)
   MX_GPIO_Init();
   MX_CAN_Init();
   MX_USART2_UART_Init();
-  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
-  //BUZZER_Init();
-  logger_uart("START INIT\n\r");
 
+  logger_uart_no_dma("START INIT\n\r");
+  Set_Filter_CAN(CANBUS_COMFORT ,CAN_RX_FIFO0, 0x2C1, 0x2C3, 0x5C1, 0x320, 0);
+  CAN_Start(CANBUS_COMFORT);
+  logger_uart_no_dma("INIT OK\n\r");
 
-  Set_Filter_CAN(CANBUS_CLUSTER ,CAN_RX_FIFO0, 0x531, 0x3BA, 0x5C1, 0x320, 0);
-  Set_Filter_CAN(CANBUS_CLUSTER ,CAN_RX_FIFO0, 0x67C, 0x000, 0x000, 0x000, 1);
-  CAN_Start(CANBUS_CLUSTER);
-  HAL_TIM_Base_Start_IT(&htim1);
-
-  logger_uart("INIT OK\n\r");
-
-
-  LED_LEFT_SA_INDICATOR_ON;
-  LED_RIGHT_SA_INDICATOR_ON;
+  OUT2_OFF;
   HAL_Delay(500);
 
 
@@ -136,17 +117,29 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	CAN_Std_Data_receive(CANBUS_CLUSTER, &rx_frame);
+	CAN_Std_Data_receive(CANBUS_COMFORT, &rx_frame);
 
-	//"(e*256+d)/192"
-	if (rx_frame.can_id==0x320)
+	if (rx_frame.can_id==0x2C3)
 		{
-		   car_data.speed = (rx_frame.data[3]<<8 | rx_frame.data[4])/192;
+			//logger_uart_no_dma("CAN ID 2C3 OK\n\r");;
 		}
+	else if (rx_frame.can_id==0x5C1)
+		{
+			logger_uart_no_dma("CAN ID 5C1 OK\n\r");;
+		}
+	  OUT2_ON;
+	  HAL_Delay(500);
+	  OUT2_OFF;
+	  HAL_Delay(500);
+
+	  if (HAL_GPIO_ReadPin(BUTTON_GPIO_Port, BUTTON_Pin) == GPIO_PIN_RESET)
+	  {
+	      // Кнопка нажата (замыкает на GND)
+		  logger_uart_no_dma("BUTTON PRESSED\n\r");
+	  }
   }
   /* USER CODE END 3 */
 }
-
 
 /**
   * @brief System Clock Configuration
@@ -205,8 +198,7 @@ void Error_Handler(void)
   }
   /* USER CODE END Error_Handler_Debug */
 }
-
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.

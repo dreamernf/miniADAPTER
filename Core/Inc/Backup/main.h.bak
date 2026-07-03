@@ -57,22 +57,14 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define BUZZER_Pin GPIO_PIN_1
-#define BUZZER_GPIO_Port GPIOA
-#define LED_DEBUG_Pin GPIO_PIN_4
-#define LED_DEBUG_GPIO_Port GPIOA
-#define LED_STATUS_SA_ACTIVE_Pin GPIO_PIN_5
-#define LED_STATUS_SA_ACTIVE_GPIO_Port GPIOA
-#define LED_STATUS_SA_PASSIVE_Pin GPIO_PIN_6
-#define LED_STATUS_SA_PASSIVE_GPIO_Port GPIOA
-#define LED_RIGHT_SA_INDICATOR_Pin GPIO_PIN_7
-#define LED_RIGHT_SA_INDICATOR_GPIO_Port GPIOA
-#define LED_LEFT_SA_INDICATOR_Pin GPIO_PIN_1
-#define LED_LEFT_SA_INDICATOR_GPIO_Port GPIOB
-#define CAN_CLUSTER_RX_Pin GPIO_PIN_11
-#define CAN_CLUSTER_RX_GPIO_Port GPIOA
-#define CAN_CLUSTER_TX_Pin GPIO_PIN_12
-#define CAN_CLUSTER_TX_GPIO_Port GPIOA
+#define BUTTON_Pin GPIO_PIN_1
+#define BUTTON_GPIO_Port GPIOA
+#define OUT1_Pin GPIO_PIN_5
+#define OUT1_GPIO_Port GPIOA
+#define CAN_COMFORT_RX_Pin GPIO_PIN_11
+#define CAN_COMFORT_RX_GPIO_Port GPIOA
+#define CAN_COMFORT_TX_Pin GPIO_PIN_12
+#define CAN_COMFORT_TX_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
 
