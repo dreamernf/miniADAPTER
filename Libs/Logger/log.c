@@ -72,14 +72,15 @@ if (logging == YES)
   {
 	switch(_RxMsg_.anz_bytes)
 				{
-					case 1: logger_uart("<-- [%03X] %02X",   _RxMsg_.can_id,_RxMsg_.data[0]); break;
-					case 2: logger_uart("<-- [%03X] %02X %02X",   _RxMsg_.can_id,_RxMsg_.data[0],_RxMsg_.data[1]); break;
-					case 3: logger_uart("<-- [%03X] %02X %02X %02X",   _RxMsg_.can_id,_RxMsg_.data[0],_RxMsg_.data[1],_RxMsg_.data[2]); break;
-					case 4: logger_uart("<-- [%03X] %02X %02X %02X %02X",   _RxMsg_.can_id,_RxMsg_.data[0],_RxMsg_.data[1],_RxMsg_.data[2],_RxMsg_.data[3]); break;
-					case 5: logger_uart("<-- [%03X] %02X %02X %02X %02X %02X",   _RxMsg_.can_id,_RxMsg_.data[0],_RxMsg_.data[1],_RxMsg_.data[2],_RxMsg_.data[3], _RxMsg_.data[4]); break;
-					case 6: logger_uart("<-- [%03X] %02X %02X %02X %02X %02X %02X",   _RxMsg_.can_id,_RxMsg_.data[0],_RxMsg_.data[1],_RxMsg_.data[2],_RxMsg_.data[3], _RxMsg_.data[4],_RxMsg_.data[5]); break;
-					case 7: logger_uart("<-- [%03X] %02X %02X %02X %02X %02X %02X %02X",   _RxMsg_.can_id,_RxMsg_.data[0],_RxMsg_.data[1],_RxMsg_.data[2],_RxMsg_.data[3], _RxMsg_.data[4],_RxMsg_.data[5],_RxMsg_.data[6]); break;
-					case 8: logger_uart("<-- [%03X] %02X %02X %02X %02X %02X %02X %02X %02X",   _RxMsg_.can_id,_RxMsg_.data[0],_RxMsg_.data[1],_RxMsg_.data[2],_RxMsg_.data[3], _RxMsg_.data[4],_RxMsg_.data[5],_RxMsg_.data[6],_RxMsg_.data[7]); break;
+					case 0: logger_uart_no_dma("[CAN][RX] id=%03lX dlc=0\r\n", (unsigned long)_RxMsg_.can_id); break;
+					case 1: logger_uart_no_dma("[CAN][RX] id=%03lX dlc=1 data=%02X\r\n", (unsigned long)_RxMsg_.can_id,_RxMsg_.data[0]); break;
+					case 2: logger_uart_no_dma("[CAN][RX] id=%03lX dlc=2 data=%02X %02X\r\n", (unsigned long)_RxMsg_.can_id,_RxMsg_.data[0],_RxMsg_.data[1]); break;
+					case 3: logger_uart_no_dma("[CAN][RX] id=%03lX dlc=3 data=%02X %02X %02X\r\n", (unsigned long)_RxMsg_.can_id,_RxMsg_.data[0],_RxMsg_.data[1],_RxMsg_.data[2]); break;
+					case 4: logger_uart_no_dma("[CAN][RX] id=%03lX dlc=4 data=%02X %02X %02X %02X\r\n", (unsigned long)_RxMsg_.can_id,_RxMsg_.data[0],_RxMsg_.data[1],_RxMsg_.data[2],_RxMsg_.data[3]); break;
+					case 5: logger_uart_no_dma("[CAN][RX] id=%03lX dlc=5 data=%02X %02X %02X %02X %02X\r\n", (unsigned long)_RxMsg_.can_id,_RxMsg_.data[0],_RxMsg_.data[1],_RxMsg_.data[2],_RxMsg_.data[3], _RxMsg_.data[4]); break;
+					case 6: logger_uart_no_dma("[CAN][RX] id=%03lX dlc=6 data=%02X %02X %02X %02X %02X %02X\r\n", (unsigned long)_RxMsg_.can_id,_RxMsg_.data[0],_RxMsg_.data[1],_RxMsg_.data[2],_RxMsg_.data[3], _RxMsg_.data[4],_RxMsg_.data[5]); break;
+					case 7: logger_uart_no_dma("[CAN][RX] id=%03lX dlc=7 data=%02X %02X %02X %02X %02X %02X %02X\r\n", (unsigned long)_RxMsg_.can_id,_RxMsg_.data[0],_RxMsg_.data[1],_RxMsg_.data[2],_RxMsg_.data[3], _RxMsg_.data[4],_RxMsg_.data[5],_RxMsg_.data[6]); break;
+					case 8: logger_uart_no_dma("[CAN][RX] id=%03lX dlc=8 data=%02X %02X %02X %02X %02X %02X %02X %02X\r\n", (unsigned long)_RxMsg_.can_id,_RxMsg_.data[0],_RxMsg_.data[1],_RxMsg_.data[2],_RxMsg_.data[3], _RxMsg_.data[4],_RxMsg_.data[5],_RxMsg_.data[6],_RxMsg_.data[7]); break;
 				}
   }
 }

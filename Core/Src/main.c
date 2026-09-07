@@ -53,6 +53,8 @@
 /* USER CODE BEGIN PV */
 CAN_RX_FRAME_t rx_frame = {0,};
 CAN_TX_FRAME_t tx_frame = {0,};
+static uint32_t led_last_toggle_ms;
+static GPIO_PinState button_last_state = GPIO_PIN_SET;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -94,14 +96,42 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_CAN_Init();
   MX_USART2_UART_Init();
+  MX_CAN_Init();
   /* USER CODE BEGIN 2 */
 
-  logger_uart_no_dma("START INIT\n\r");
-  Set_Filter_CAN(CANBUS_COMFORT ,CAN_RX_FIFO0, 0x2C1, 0x2C3, 0x5C1, 0x320, 0);
-  CAN_Start(CANBUS_COMFORT);
-  logger_uart_no_dma("INIT OK\n\r");
+  logger_uart_no_dma("\r\n=== miniADAPTER CAN diagnostic ===\r\n");
+  logger_uart_no_dma("UART: 115200 8N1 | CAN: PCLK/30/16TQ = 100 kbit/s\r\n");
+  logger_uart_no_dma("Test frame: STD 0x6FE every 1000 ms\r\n");
+
+  if (CAN_Diagnostic_LoopbackSelfTest(CANBUS_COMFORT) == HAL_OK)
+  {
+    logger_uart_no_dma("[CAN][SELFTEST] PASS - MCU CAN controller and software path work\r\n");
+  }
+  else
+  {
+    logger_uart_no_dma("[CAN][SELFTEST] FAIL - MCU clock/config/controller problem\r\n");
+  }
+
+  if (Set_Filter_CAN(CANBUS_COMFORT, CAN_RX_FIFO0, 0x2C1, 0x2C3, 0x5C1, 0x320, 0) != HAL_OK)
+  {
+    logger_uart_no_dma("[CAN][INIT] FILTER FAIL err=0x%08lX\r\n", (unsigned long)HAL_CAN_GetError(CANBUS_COMFORT));
+    Error_Handler();
+  }
+  if (CAN_Diagnostic_Enable(CANBUS_COMFORT) != HAL_OK)
+  {
+    logger_uart_no_dma("[CAN][INIT] NOTIFICATION FAIL err=0x%08lX\r\n", (unsigned long)HAL_CAN_GetError(CANBUS_COMFORT));
+    Error_Handler();
+  }
+  if (CAN_Start(CANBUS_COMFORT) != HAL_OK)
+  {
+    logger_uart_no_dma("[CAN][INIT] START FAIL err=0x%08lX\r\n", (unsigned long)HAL_CAN_GetError(CANBUS_COMFORT));
+    Error_Handler();
+  }
+  logger_uart_no_dma("[CAN][INIT] OK state=%u BTR=0x%08lX\r\n",
+                     (unsigned int)HAL_CAN_GetState(CANBUS_COMFORT),
+                     (unsigned long)(CANBUS_COMFORT)->Instance->BTR);
+  logger_uart_no_dma("Interpretation: SELFTEST PASS + repeated ACK error => check transceiver/wiring/termination/peer node\r\n");
 
   OUT2_OFF;
   HAL_Delay(500);
@@ -117,26 +147,27 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	CAN_Std_Data_receive(CANBUS_COMFORT, &rx_frame);
+	if (CAN_Std_Data_receive(CANBUS_COMFORT, &rx_frame) == CAN_RX_READY)
+	{
+	  Logger_CAN_RX(YES, rx_frame);
+	}
 
-	if (rx_frame.can_id==0x2C3)
-		{
-			//logger_uart_no_dma("CAN ID 2C3 OK\n\r");;
-		}
-	else if (rx_frame.can_id==0x5C1)
-		{
-			logger_uart_no_dma("CAN ID 5C1 OK\n\r");;
-		}
-	  OUT2_ON;
-	  HAL_Delay(500);
-	  OUT2_OFF;
-	  HAL_Delay(500);
+	CAN_Diagnostic_Task(CANBUS_COMFORT);
 
-	  if (HAL_GPIO_ReadPin(BUTTON_GPIO_Port, BUTTON_Pin) == GPIO_PIN_RESET)
+	if ((HAL_GetTick() - led_last_toggle_ms) >= 500U)
+	{
+	  HAL_GPIO_TogglePin(OUT2_GPIO_Port, OUT2_Pin);
+	  led_last_toggle_ms = HAL_GetTick();
+	}
+
+	{
+	  GPIO_PinState button_state = HAL_GPIO_ReadPin(BUTTON_GPIO_Port, BUTTON_Pin);
+	  if (button_state != button_last_state)
 	  {
-	      // Кнопка нажата (замыкает на GND)
-		  logger_uart_no_dma("BUTTON PRESSED\n\r");
+		button_last_state = button_state;
+		logger_uart_no_dma("[GPIO] BUTTON %s\r\n", button_state == GPIO_PIN_RESET ? "PRESSED" : "RELEASED");
 	  }
+	}
   }
   /* USER CODE END 3 */
 }
